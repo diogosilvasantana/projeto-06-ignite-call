@@ -1,6 +1,6 @@
-import { prisma } from '@/src/lib/prisma'
-import { setCookie } from 'nookies'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { setCookie } from 'nookies'
+import { prisma } from '../../../lib/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,12 +13,14 @@ export default async function handler(
   const { name, username } = req.body
 
   const userExists = await prisma.user.findUnique({
-    where: { username },
+    where: {
+      username,
+    },
   })
 
   if (userExists) {
     return res.status(400).json({
-      message: 'Username already exists.',
+      message: 'Username already taken.',
     })
   }
 
